@@ -5,7 +5,7 @@
     "fieldname": "total_sq_ft",
     "fieldtype": "Float",
     "insert_after": "mobile_no",
-    "label": "Total Sq Ft",
+    "label": "Total Capacity (Sq Ft)",
     "module": "b2r_custom",
     "name": "Warehouse-total_sq_ft"
   },
@@ -15,7 +15,7 @@
     "fieldname": "used_sq_ft",
     "fieldtype": "Float",
     "insert_after": "total_sq_ft",
-    "label": "Used Sq Ft",
+    "label": "Occupied Space (Sq Ft)",
     "module": "b2r_custom",
     "name": "Warehouse-used_sq_ft",
     "read_only": 1
@@ -36,7 +36,7 @@
     "fieldname": "product_space_unit",
     "fieldtype": "Float",
     "insert_after": "is_branded",
-    "label": "Product Space Unit",
+    "label": "Space Required Per Unit (Sq Ft)",
     "module": "b2r_custom",
     "name": "Item-product_space_unit"
   },

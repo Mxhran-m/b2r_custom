@@ -53,6 +53,7 @@ fixtures = [
 
 # include js in doctype views
 doctype_js = {
+	"Item": "public/js/item.js",
 	"Warehouse": "public/js/warehouse.js",
 }
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
