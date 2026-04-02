@@ -1,0 +1,98 @@
+[
+  {
+    "doctype": "Custom Field",
+    "dt": "Warehouse",
+    "fieldname": "total_sq_ft",
+    "fieldtype": "Float",
+    "insert_after": "mobile_no",
+    "label": "Total Sq Ft",
+    "module": "b2r_custom",
+    "name": "Warehouse-total_sq_ft"
+  },
+  {
+    "doctype": "Custom Field",
+    "dt": "Warehouse",
+    "fieldname": "used_sq_ft",
+    "fieldtype": "Float",
+    "insert_after": "total_sq_ft",
+    "label": "Used Sq Ft",
+    "module": "b2r_custom",
+    "name": "Warehouse-used_sq_ft",
+    "read_only": 1
+  },
+  {
+    "doctype": "Custom Field",
+    "dt": "Item",
+    "fieldname": "is_branded",
+    "fieldtype": "Check",
+    "insert_after": "brand",
+    "label": "Is Branded",
+    "module": "b2r_custom",
+    "name": "Item-is_branded"
+  },
+  {
+    "doctype": "Custom Field",
+    "dt": "Item",
+    "fieldname": "product_space_unit",
+    "fieldtype": "Float",
+    "insert_after": "is_branded",
+    "label": "Product Space Unit",
+    "module": "b2r_custom",
+    "name": "Item-product_space_unit"
+  },
+  {
+    "doctype": "Custom Field",
+    "dt": "Sales Invoice",
+    "fieldname": "billing_mode",
+    "fieldtype": "Select",
+    "insert_after": "project",
+    "label": "Billing Mode",
+    "module": "b2r_custom",
+    "name": "Sales Invoice-billing_mode",
+    "options": "With Billing\nWithout Billing"
+  },
+  {
+    "allow_on_submit": 1,
+    "doctype": "Custom Field",
+    "dt": "Sales Invoice",
+    "fieldname": "stock_reserved_on_payment",
+    "fieldtype": "Check",
+    "hidden": 1,
+    "insert_after": "billing_mode",
+    "label": "Stock Reserved On Payment",
+    "module": "b2r_custom",
+    "name": "Sales Invoice-stock_reserved_on_payment",
+    "no_copy": 1,
+    "read_only": 1
+  },
+  {
+    "doctype": "Custom Field",
+    "dt": "Employee",
+    "fieldname": "face_image_hash",
+    "fieldtype": "Data",
+    "insert_after": "image",
+    "label": "Face Image Hash",
+    "module": "b2r_custom",
+    "name": "Employee-face_image_hash"
+  },
+  {
+    "doctype": "Custom Field",
+    "dt": "Attendance",
+    "fieldname": "checkin_geolocation",
+    "fieldtype": "Geolocation",
+    "insert_after": "out_time",
+    "label": "Check-in Geolocation",
+    "module": "b2r_custom",
+    "name": "Attendance-checkin_geolocation"
+  },
+  {
+    "doctype": "Custom Field",
+    "dt": "Employee Checkin",
+    "fieldname": "checkin_image_hash",
+    "fieldtype": "Data",
+    "insert_after": "geolocation",
+    "label": "Check-in Image Hash",
+    "module": "b2r_custom",
+    "name": "Employee Checkin-checkin_image_hash"
+  }
+]
