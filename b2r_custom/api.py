@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import html
 import json
 from collections import defaultdict
@@ -10,6 +11,7 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 from frappe.utils import cint, cstr, flt, getdate
+from frappe.utils.file_manager import get_file
 
 SPACE_WARNING_THRESHOLDS = (80, 90)
 WITHOUT_BILLING = "Without Billing"
@@ -146,16 +148,20 @@ def release_reserved_stock_for_invoice(invoice: Document):
 
 def validate_employee_checkin(doc: Document, method: str | None = None):
 	if not cstr(doc.get("checkin_image_hash")).strip():
-		frappe.throw(_("Check-in image hash is required for Employee Checkin."))
+		frappe.throw(_("Check-in image is required for Employee Checkin."))
 
 	if not cstr(doc.get("geolocation")).strip():
 		frappe.throw(_("Geolocation is required for Employee Checkin."))
 
-	employee_hash = cstr(frappe.db.get_value("Employee", doc.employee, "face_image_hash")).strip()
-	checkin_hash = cstr(doc.get("checkin_image_hash")).strip()
+	employee_image = cstr(frappe.db.get_value("Employee", doc.employee, "face_image_hash")).strip()
+	checkin_image = cstr(doc.get("checkin_image_hash")).strip()
+	if not employee_image:
+		frappe.throw(_("Face image is required on the Employee record before check-in validation can run."))
 
-	if employee_hash and employee_hash.lower() != checkin_hash.lower():
-		frappe.throw(_("Check-in image hash does not match the employee face image hash."))
+	employee_hash = _get_image_content_hash(employee_image)
+	checkin_hash = _get_image_content_hash(checkin_image)
+	if employee_hash != checkin_hash:
+		frappe.throw(_("Check-in image does not match the employee face image."))
 
 
 def validate_attendance(doc: Document, method: str | None = None):
@@ -542,6 +548,28 @@ def _get_vendor_aging_recipients() -> list[str]:
 
 def _escape_html(value) -> str:
 	return html.escape(cstr(value), quote=True)
+
+
+def _get_image_content_hash(file_url: str) -> str:
+	try:
+		_, content = get_file(file_url)
+	except (FileNotFoundError, OSError, frappe.DoesNotExistError) as error:
+		frappe.log_error(
+			title="B2R Face Image Read Failed",
+			message=frappe.get_traceback(with_context=True),
+		)
+		frappe.throw(_("Unable to read image file {0}.").format(frappe.bold(file_url)))
+	except Exception:
+		frappe.log_error(
+			title="B2R Face Image Read Failed",
+			message=frappe.get_traceback(with_context=True),
+		)
+		raise
+
+	if isinstance(content, str):
+		content = content.encode()
+
+	return hashlib.sha256(content).hexdigest()
 
 
 def _sync_custom_field(custom_field: dict):
