@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import html
 from collections import defaultdict
 from decimal import Decimal
 
@@ -289,7 +290,7 @@ def send_vendor_aging_reminders():
 		lines.append("<ul>")
 		for row in bucket_rows[:20]:
 			lines.append(
-				f"<li>{row.supplier} / {row.company} / {row.name} / Due {row.due_date} / Outstanding {flt(row.outstanding_amount, 2)}</li>"
+				f"<li>{_escape_html(row.supplier)} / {_escape_html(row.company)} / {_escape_html(row.name)} / Due {_escape_html(row.due_date)} / Outstanding {_escape_html(flt(row.outstanding_amount, 2))}</li>"
 			)
 		lines.append("</ul>")
 
@@ -609,3 +610,7 @@ def _get_vendor_aging_recipients() -> list[str]:
 		return [email for email in emails if email]
 
 	return []
+
+
+def _escape_html(value) -> str:
+	return html.escape(cstr(value), quote=True)
