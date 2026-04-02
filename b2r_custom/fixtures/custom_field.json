@@ -69,9 +69,9 @@
     "doctype": "Custom Field",
     "dt": "Employee",
     "fieldname": "face_image_hash",
-    "fieldtype": "Data",
+    "fieldtype": "Attach Image",
     "insert_after": "image",
-    "label": "Face Image Hash",
+    "label": "Face Image",
     "module": "b2r_custom",
     "name": "Employee-face_image_hash"
   },
@@ -89,9 +89,9 @@
     "doctype": "Custom Field",
     "dt": "Employee Checkin",
     "fieldname": "checkin_image_hash",
-    "fieldtype": "Data",
+    "fieldtype": "Attach Image",
     "insert_after": "geolocation",
-    "label": "Check-in Image Hash",
+    "label": "Check-in Image",
     "module": "b2r_custom",
     "name": "Employee Checkin-checkin_image_hash"
   }
