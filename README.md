@@ -12,6 +12,23 @@ bench get-app $URL_OF_THIS_REPO --branch main
 bench install-app b2r_custom
 ```
 
+### Deployment Notes
+
+After pulling the branch into your bench, run:
+
+```bash
+bench --site [sitename] migrate
+bench --site [sitename] export-fixtures
+```
+
+For Docker deployments, the equivalent bench command inside the backend container is:
+
+```bash
+docker compose -f pwd.yml exec backend bench --site frontend migrate
+```
+
+If you want `billing_mode` to populate an Accounting Dimension field automatically, set `b2r_billing_dimension_field` in `site_config.json` to the target fieldname.
+
 ### Contributing
 
 This app uses `pre-commit` for code formatting and linting. Please [install pre-commit](https://pre-commit.com/#installation) and enable it for this repository:

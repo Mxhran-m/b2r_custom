@@ -5,6 +5,15 @@ app_description = "This is a custom ERP for B2R"
 app_email = "mrts.products@gmail.com"
 app_license = "mit"
 
+after_install = "b2r_custom.install.after_install"
+
+fixtures = [
+	{
+		"doctype": "Custom Field",
+		"filters": [["module", "=", "b2r_custom"]],
+	},
+]
+
 # Apps
 # ------------------
 
@@ -132,34 +141,46 @@ app_license = "mit"
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-# 	}
-# }
+doc_events = {
+	"Purchase Receipt": {
+		"validate": "b2r_custom.api.validate_inbound_capacity",
+		"on_submit": "b2r_custom.api.handle_stock_impact_submit",
+		"on_cancel": "b2r_custom.api.handle_stock_impact_cancel",
+	},
+	"Stock Entry": {
+		"validate": "b2r_custom.api.validate_inbound_capacity",
+		"on_submit": "b2r_custom.api.handle_stock_impact_submit",
+		"on_cancel": "b2r_custom.api.handle_stock_impact_cancel",
+	},
+	"Delivery Note": {
+		"on_submit": "b2r_custom.api.handle_stock_impact_submit",
+		"on_cancel": "b2r_custom.api.handle_stock_impact_cancel",
+	},
+	"Sales Invoice": {
+		"validate": "b2r_custom.api.validate_sales_invoice",
+		"on_submit": "b2r_custom.api.handle_sales_invoice_submit",
+		"on_cancel": "b2r_custom.api.handle_sales_invoice_cancel",
+	},
+	"Payment Entry": {
+		"on_submit": "b2r_custom.api.reserve_stock_on_payment",
+		"on_cancel": "b2r_custom.api.release_stock_on_payment_cancel",
+	},
+	"Employee Checkin": {
+		"validate": "b2r_custom.api.validate_employee_checkin",
+	},
+	"Attendance": {
+		"validate": "b2r_custom.api.validate_attendance",
+	},
+}
 
 # Scheduled Tasks
 # ---------------
 
-# scheduler_events = {
-# 	"all": [
-# 		"b2r_custom.tasks.all"
-# 	],
-# 	"daily": [
-# 		"b2r_custom.tasks.daily"
-# 	],
-# 	"hourly": [
-# 		"b2r_custom.tasks.hourly"
-# 	],
-# 	"weekly": [
-# 		"b2r_custom.tasks.weekly"
-# 	],
-# 	"monthly": [
-# 		"b2r_custom.tasks.monthly"
-# 	],
-# }
+scheduler_events = {
+	"daily": [
+		"b2r_custom.api.send_vendor_aging_reminders",
+	],
+}
 
 # Testing
 # -------
