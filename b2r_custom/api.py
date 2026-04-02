@@ -553,8 +553,18 @@ def _escape_html(value) -> str:
 def _get_image_content_hash(file_url: str) -> str:
 	try:
 		_, content = get_file(file_url)
-	except Exception:
+	except (FileNotFoundError, OSError, frappe.DoesNotExistError) as error:
+		frappe.log_error(
+			title="B2R Face Image Read Failed",
+			message=frappe.get_traceback(with_context=True),
+		)
 		frappe.throw(_("Unable to read image file {0}.").format(frappe.bold(file_url)))
+	except Exception:
+		frappe.log_error(
+			title="B2R Face Image Read Failed",
+			message=frappe.get_traceback(with_context=True),
+		)
+		raise
 
 	if isinstance(content, str):
 		content = content.encode()

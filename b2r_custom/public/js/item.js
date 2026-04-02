@@ -41,12 +41,8 @@ function renderSpaceSummary(frm) {
 	frm.set_intro(
 		__(
 			"Each unit of this item consumes <b>{0}</b> sq ft of warehouse space.",
-			[formatItemNumber(spacePerUnit)]
+			[window.b2rCustom.formatFloat(spacePerUnit)]
 		),
 		"green"
 	);
-}
-
-function formatItemNumber(value) {
-	return frappe.format(value || 0, { fieldtype: "Float", precision: 2 });
 }

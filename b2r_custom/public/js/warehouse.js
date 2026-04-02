@@ -58,7 +58,11 @@ function renderCapacitySummary(frm) {
 	frm.set_intro(
 		__(
 			"Occupancy: <b>{0}%</b> | Used: <b>{1}</b> sq ft | Remaining: <b>{2}</b> sq ft",
-			[formatNumber(occupancy), formatNumber(used), formatNumber(remaining)]
+			[
+				window.b2rCustom.formatFloat(occupancy),
+				window.b2rCustom.formatFloat(used),
+				window.b2rCustom.formatFloat(remaining),
+			]
 		),
 		indicator
 	);
@@ -84,8 +88,4 @@ function refreshOccupancy(frm) {
 			frappe.show_alert({ message: __("Warehouse occupancy refreshed."), indicator: "green" });
 		},
 	});
-}
-
-function formatNumber(value) {
-	return frappe.format(value || 0, { fieldtype: "Float", precision: 2 });
 }
