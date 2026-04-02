@@ -1,12 +1,13 @@
 from __future__ import annotations
 
 import html
+import json
 from collections import defaultdict
 from decimal import Decimal
+from pathlib import Path
 
 import frappe
 from frappe import _
-from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
 from frappe.model.document import Document
 from frappe.utils import cint, cstr, flt, getdate
 
@@ -17,88 +18,14 @@ RESERVATION_FIELDNAME = "stock_reserved_on_payment"
 
 
 def ensure_customizations():
-	create_custom_fields(get_custom_field_definitions(), update=True)
+	for custom_field in get_custom_field_definitions():
+		_sync_custom_field(custom_field)
 
 
 def get_custom_field_definitions():
-	custom_fields = {
-		"Warehouse": [
-			{
-				"fieldname": "total_sq_ft",
-				"fieldtype": "Float",
-				"label": "Total Sq Ft",
-				"insert_after": "mobile_no",
-			},
-			{
-				"fieldname": "used_sq_ft",
-				"fieldtype": "Float",
-				"label": "Used Sq Ft",
-				"insert_after": "total_sq_ft",
-				"read_only": 1,
-			},
-		],
-		"Item": [
-			{
-				"fieldname": "is_branded",
-				"fieldtype": "Check",
-				"label": "Is Branded",
-				"insert_after": "brand",
-			},
-			{
-				"fieldname": "product_space_unit",
-				"fieldtype": "Float",
-				"label": "Product Space Unit",
-				"insert_after": "is_branded",
-			},
-		],
-		"Sales Invoice": [
-			{
-				"fieldname": "billing_mode",
-				"fieldtype": "Select",
-				"label": "Billing Mode",
-				"insert_after": "project",
-				"options": f"{WITH_BILLING}\n{WITHOUT_BILLING}",
-			},
-			{
-				"fieldname": RESERVATION_FIELDNAME,
-				"fieldtype": "Check",
-				"label": "Stock Reserved On Payment",
-				"insert_after": "billing_mode",
-				"hidden": 1,
-				"no_copy": 1,
-				"read_only": 1,
-				"allow_on_submit": 1,
-			},
-		],
-		"Employee": [
-			{
-				"fieldname": "face_image_hash",
-				"fieldtype": "Data",
-				"label": "Face Image Hash",
-				"insert_after": "image",
-			},
-		],
-		"Attendance": [
-			{
-				"fieldname": "checkin_geolocation",
-				"fieldtype": "Geolocation",
-				"label": "Check-in Geolocation",
-				"insert_after": "out_time",
-			},
-		],
-		"Employee Checkin": [
-			{
-				"fieldname": "checkin_image_hash",
-				"fieldtype": "Data",
-				"label": "Check-in Image Hash",
-				"insert_after": "geolocation",
-			},
-		],
-	}
-	for fields in custom_fields.values():
-		for field in fields:
-			field.setdefault("module", "b2r_custom")
-	return custom_fields
+	fixtures_path = Path(__file__).resolve().parent / "fixtures" / "custom_field.json"
+	with fixtures_path.open(encoding="utf-8") as fixture_file:
+		return json.load(fixture_file)
 
 
 def validate_inbound_capacity(doc: Document, method: str | None = None):
@@ -594,6 +521,7 @@ def _get_attendance_geolocation(employee: str, attendance_date) -> str | None:
 
 
 def _get_vendor_aging_recipients() -> list[str]:
+	recipients: set[str] = set()
 	for role in ("Accountant", "Accounts Manager", "Accounts User"):
 		if not frappe.db.exists("Role", role):
 			continue
@@ -607,10 +535,29 @@ def _get_vendor_aging_recipients() -> list[str]:
 			continue
 
 		emails = frappe.get_all("User", filters={"name": ("in", users), "enabled": 1}, pluck="email")
-		return [email for email in emails if email]
+		recipients.update(email for email in emails if email)
 
-	return []
+	return sorted(recipients)
 
 
 def _escape_html(value) -> str:
 	return html.escape(cstr(value), quote=True)
+
+
+def _sync_custom_field(custom_field: dict):
+	field_data = {key: value for key, value in custom_field.items() if key not in {"doctype", "name"}}
+	existing_name = frappe.db.get_value(
+		"Custom Field",
+		{"dt": custom_field["dt"], "fieldname": custom_field["fieldname"]},
+		"name",
+	)
+
+	if existing_name:
+		custom_doc = frappe.get_doc("Custom Field", existing_name)
+		custom_doc.update(field_data)
+		custom_doc.flags.ignore_validate = True
+		custom_doc.save(ignore_permissions=True)
+		return
+
+	custom_doc = frappe.get_doc({"doctype": "Custom Field", **field_data})
+	custom_doc.insert(ignore_permissions=True)
