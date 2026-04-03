@@ -73,11 +73,3 @@ body[data-path="login"] a[href*="frappe"],
 body[data-path="login"] a[href*="erpnext"] {
 	display: none !important;
 }
-
-.standard-sidebar-section [title*="ERPNext"],
-.standard-sidebar-section [title*="Frappe"],
-a[href*="frappe"],
-a[href*="erpnext.com"] {
-	opacity: 0;
-	pointer-events: none;
-}
