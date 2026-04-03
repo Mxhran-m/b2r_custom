@@ -1,0 +1,75 @@
+:root {
+	--b2r-brand-red: #ef1c25;
+	--b2r-brand-red-dark: #bb1118;
+	--b2r-brand-white: #f8fafc;
+	--b2r-brand-ink: #09090b;
+}
+
+.navbar-home img,
+.app-logo img,
+.app-logo-container img,
+.layout-side-section .app-logo img {
+	max-height: 34px;
+	width: auto;
+}
+
+.b2r-brand-mark {
+	align-items: center;
+	display: inline-flex;
+	gap: 10px;
+	line-height: 1;
+}
+
+.b2r-brand-mark img {
+	display: block;
+	height: 34px;
+	width: auto;
+}
+
+.b2r-brand-mark span {
+	color: var(--b2r-brand-white);
+	font-size: 0.95rem;
+	font-weight: 700;
+	letter-spacing: 0.01em;
+}
+
+body[data-path="login"] {
+	background:
+		radial-gradient(circle at top left, rgba(239, 28, 37, 0.22), transparent 28%),
+		radial-gradient(circle at bottom right, rgba(239, 28, 37, 0.12), transparent 30%),
+		linear-gradient(135deg, #09090b, #16181d 50%, #111215);
+}
+
+body[data-path="login"] .page-card {
+	background: rgba(15, 15, 18, 0.88);
+	border: 1px solid rgba(255, 255, 255, 0.08);
+	box-shadow: 0 24px 70px rgba(0, 0, 0, 0.35);
+}
+
+body[data-path="login"] .page-card .page-card-head h4,
+body[data-path="login"] .page-card label,
+body[data-path="login"] .page-card .page-card-body,
+body[data-path="login"] .page-card .page-card-actions {
+	color: var(--b2r-brand-white);
+}
+
+body[data-path="login"] .btn-primary {
+	background: linear-gradient(135deg, var(--b2r-brand-red), var(--b2r-brand-red-dark));
+	border-color: transparent;
+}
+
+body[data-path="login"] .for-login .page-card-head::before {
+	background: url("/assets/b2r_custom/img/b2r-logo.svg") center / contain no-repeat;
+	content: "";
+	display: block;
+	height: 100px;
+	margin: 0 auto 18px;
+	width: 180px;
+}
+
+body[data-path="login"] .for-login .page-card-head img,
+body[data-path="login"] .for-login .app-logo,
+body[data-path="login"] a[href*="frappe"],
+body[data-path="login"] a[href*="erpnext"] {
+	display: none !important;
+}

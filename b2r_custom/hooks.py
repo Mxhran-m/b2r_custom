@@ -1,9 +1,10 @@
 app_name = "b2r_custom"
-app_title = "b2r_custom"
+app_title = "B2R Custom ERP"
 app_publisher = "M R Tech Solutions"
 app_description = "This is a custom ERP for B2R"
 app_email = "mrts.products@gmail.com"
 app_license = "mit"
+app_logo_url = "/assets/b2r_custom/img/b2r-logo.svg"
 
 after_install = "b2r_custom.install.after_install"
 
@@ -34,12 +35,15 @@ fixtures = [
 # ------------------
 
 # include js, css files in header of desk.html
-# app_include_css = "/assets/b2r_custom/css/b2r_custom.css"
-app_include_js = "/assets/b2r_custom/js/common.js"
+app_include_css = "/assets/b2r_custom/css/branding.css"
+app_include_js = [
+	"/assets/b2r_custom/js/common.js",
+	"/assets/b2r_custom/js/branding.js",
+]
 
 # include js, css files in header of web template
-# web_include_css = "/assets/b2r_custom/css/b2r_custom.css"
-# web_include_js = "/assets/b2r_custom/js/b2r_custom.js"
+web_include_css = "/assets/b2r_custom/css/branding.css"
+web_include_js = "/assets/b2r_custom/js/branding.js"
 
 # include custom scss in every website theme (without file extension ".scss")
 # website_theme_scss = "b2r_custom/public/scss/website"
@@ -64,6 +68,23 @@ doctype_js = {
 # ------------------
 # include app icons in desk
 # app_include_icons = "b2r_custom/public/icons.svg"
+
+brand_html = """
+<span class="b2r-brand-mark">
+	<img src="/assets/b2r_custom/img/b2r-logo.svg" alt="B2R Custom ERP" />
+	<span>B2R Custom ERP</span>
+</span>
+"""
+
+website_context = {
+	"favicon": "/assets/b2r_custom/img/b2r-mark.svg",
+}
+
+default_mail_footer = """
+<div style="margin-top: 16px; font-size: 12px; color: #6b7280;">
+	Sent via B2R Custom ERP
+</div>
+"""
 
 # Home Pages
 # ----------
